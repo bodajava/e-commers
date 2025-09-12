@@ -14,15 +14,12 @@ export function useCartActions() {
       const res = await addToCart(productId);
       if (res.status === "success") {
         await refreshCart();
-        toast.success("✅ Product added to cart");
         return true;
       } else {
-        toast.error("Failed to add product to cart");
         return false;
       }
     } catch (error) {
       console.error("Add to cart error:", error);
-      toast.error("Failed to add product to cart");
       return false;
     }
   };

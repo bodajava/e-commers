@@ -2,6 +2,7 @@
 
 import React from "react";
 import { useCartActions } from "@/hooks/useCartActions";
+import { toast } from "sonner";
 
 export default function AddBtn({ id }: { id: string }) {
   const { addProductToCart } = useCartActions();
@@ -12,8 +13,14 @@ export default function AddBtn({ id }: { id: string }) {
     try {
       const result = await addProductToCart(productId);
       console.log("Add to cart result:", result);
+      if (result) {
+        toast.success("✅ Product added to cart successfully!");
+      } else {
+        toast.error("❌ Failed to add product to cart");
+      }
     } catch (error) {
       console.error("Add to cart error:", error);
+      toast.error("❌ Failed to add product to cart");
     }
   }
 

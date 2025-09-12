@@ -22,6 +22,7 @@ export default function CartContextProvider({ children }: { children: React.Reac
       console.log("Cart from API:", res);
     } catch (err) {
       console.error("Error fetching cart:", err);
+      setCart(null);
     }
   }
 

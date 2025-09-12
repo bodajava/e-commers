@@ -5,6 +5,7 @@ import { RotateCcw } from "lucide-react";
 import Link from "next/link";
 import getAllBrand from "@/api/getAllBrand/getAllBrand";
 import { Brand as BrandType } from "@/type/product.type";
+import { toast } from "sonner";
 
 export default function Brand() {
   const [brands, setBrands] = useState<BrandType[]>([]);
@@ -12,9 +13,16 @@ export default function Brand() {
 
   async function getBrandss() {
     setLoading(true);
-    const res = await getAllBrand();
-    setBrands(res?.data || []);
-    setLoading(false);
+    try {
+      const res = await getAllBrand();
+      setBrands(res?.data || []);
+    } catch (error) {
+      console.error("Error fetching brands:", error);
+      setBrands([]);
+      toast.error("❌ Failed to load brands");
+    } finally {
+      setLoading(false);
+    }
   }
 
   useEffect(() => {

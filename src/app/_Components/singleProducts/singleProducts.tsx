@@ -8,6 +8,7 @@ import AddBtn from "../addBtn/addBtn";
 import { Heart } from "lucide-react";
 import addWishlist from "@/api/wishlist/wishlist.api";
 import removeWishlist from "@/api/wishlist/removeWshlist";
+import { toast } from "sonner";
 
 export default function SingleProducts({
   product,
@@ -21,14 +22,25 @@ export default function SingleProducts({
     try {
       setLoading(true);
       if (isFavorite) {
-        await removeWishlist(product._id);
-        setIsFavorite(false);
+        const result = await removeWishlist(product._id);
+        if (result.status === "success") {
+          setIsFavorite(false);
+          toast.success("✅ Removed from wishlist");
+        } else {
+          toast.error("❌ Failed to remove from wishlist");
+        }
       } else {
-        await addWishlist(product._id);
-        setIsFavorite(true);
+        const result = await addWishlist(product._id);
+        if (result.status === "success") {
+          setIsFavorite(true);
+          toast.success("❤️ Added to wishlist");
+        } else {
+          toast.error("❌ Failed to add to wishlist");
+        }
       }
     } catch (err) {
       console.error("❌ Wishlist toggle error:", err);
+      toast.error("❌ Failed to update wishlist");
     } finally {
       setLoading(false);
     }
