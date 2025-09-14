@@ -15,7 +15,7 @@ export default async function onlinePayment(
     {
       method: "POST",
       headers: {
-        token: token as string,
+        token,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ shippingAddress: formValues }),

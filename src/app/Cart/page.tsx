@@ -15,7 +15,7 @@ export default function Cart() {
   const [removeDisable, setRemoveDisable] = useState(false);
   const [updatingProduct, setUpdatingProduct] = useState<string | null>(null);
   const [clearAllCart, setClearAllCart] = useState(false);
-
+  
   if (!cart) {
     return <Loading />;
   }
@@ -94,7 +94,7 @@ export default function Cart() {
       ) : (
         <>
           {/* products */}
-          <div className="space-y-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-4">
             {cart.data.products.map((item: cartProductType) => (
               <div
                 key={item._id}

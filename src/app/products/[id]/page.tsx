@@ -9,14 +9,13 @@ import addWishlist from '@/api/wishlist/wishlist.api';
 import removeWishlist from '@/api/wishlist/removeWshlist';
 import getRealtedP from '@/productCategoriseActions/related.Action';
 import Link from 'next/link';
-import { profuctType } from '@/type/product.type';
 
 export default function ProductDetails(props: { params: Promise<{ id: string }> }) {
   const [id, setId] = useState<string | null>(null);
-  const [product, setProduct] = useState<profuctType | null>(null);
+  const [product, setProduct] = useState<any>(null);
   const [isFavorite, setIsFavorite] = useState(false);
   const [loadingFav, setLoadingFav] = useState(false);
-  const [relatedProducts, setRelatedProducts] = useState<profuctType[]>([]);
+  const [relatedProducts, setRelatedProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -31,12 +30,12 @@ export default function ProductDetails(props: { params: Promise<{ id: string }> 
     if (!id) return;
     async function fetchData() {
       try {
-        const data = await SelectedProduct(id!);
+        const data = await SelectedProduct(id);
         setProduct(data);
 
         if (data?.category?._id) {
           const related = await getRealtedP(data.category._id);
-          const filtered = related.data.filter((p: profuctType) => p._id !== id);
+          const filtered = related.data.filter((p: any) => p._id !== id);
           setRelatedProducts(filtered);
         }
       } catch (err) {

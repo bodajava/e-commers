@@ -1,4 +1,4 @@
-/* eslint-disable */
+/* eslint-disable لاغ*/
 import {User}  from "next-auth"
 import { JWT } from "next-auth/jwt"
 

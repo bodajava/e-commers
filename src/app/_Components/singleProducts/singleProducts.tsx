@@ -9,6 +9,8 @@ import { Heart } from "lucide-react";
 import addWishlist from "@/api/wishlist/wishlist.api";
 import removeWishlist from "@/api/wishlist/removeWshlist";
 import { toast } from "sonner";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 export default function SingleProducts({
   product,
@@ -17,30 +19,44 @@ export default function SingleProducts({
 }) {
   const [isFavorite, setIsFavorite] = useState(false);
   const [loading, setLoading] = useState(false);
+  const { data: session } = useSession();
+  const router = useRouter();
 
   const handleWishlist = async () => {
+    // Check if user is logged in
+    if (!session?.user) {
+      toast.error("🔒 يجب تسجيل الدخول أولاً لإضافة المنتج للمفضلة", {
+        description: "اضغط هنا للانتقال لصفحة تسجيل الدخول",
+        action: {
+          label: "تسجيل الدخول",
+          onClick: () => router.push("/login")
+        }
+      });
+      return;
+    }
+
     try {
       setLoading(true);
       if (isFavorite) {
         const result = await removeWishlist(product._id);
         if (result.status === "success") {
           setIsFavorite(false);
-          toast.success("✅ Removed from wishlist");
+          toast.success("✅ تم حذف المنتج من المفضلة");
         } else {
-          toast.error("❌ Failed to remove from wishlist");
+          toast.error("❌ فشل في حذف المنتج من المفضلة");
         }
       } else {
         const result = await addWishlist(product._id);
         if (result.status === "success") {
           setIsFavorite(true);
-          toast.success("❤️ Added to wishlist");
+          toast.success("❤️ تم إضافة المنتج للمفضلة");
         } else {
-          toast.error("❌ Failed to add to wishlist");
+          toast.error("❌ فشل في إضافة المنتج للمفضلة");
         }
       }
     } catch (err) {
       console.error("❌ Wishlist toggle error:", err);
-      toast.error("❌ Failed to update wishlist");
+      toast.error("❌ فشل في تحديث المفضلة");
     } finally {
       setLoading(false);
     }

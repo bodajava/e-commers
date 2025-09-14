@@ -16,10 +16,19 @@ export function useCartActions() {
         await refreshCart();
         return true;
       } else {
+        // Check if it's an authentication error
+        if (res.message && res.message.includes("login")) {
+          toast.error("🔒 يجب تسجيل الدخول أولاً", {
+            description: "يرجى تسجيل الدخول لإضافة المنتجات للسلة"
+          });
+        } else {
+          toast.error("❌ فشل في إضافة المنتج للسلة");
+        }
         return false;
       }
     } catch (error) {
       console.error("Add to cart error:", error);
+      toast.error("❌ فشل في إضافة المنتج للسلة");
       return false;
     }
   };

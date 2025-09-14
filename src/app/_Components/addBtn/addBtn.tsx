@@ -3,24 +3,40 @@
 import React from "react";
 import { useCartActions } from "@/hooks/useCartActions";
 import { toast } from "sonner";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 export default function AddBtn({ id }: { id: string }) {
   const { addProductToCart } = useCartActions();
+  const { data: session } = useSession();
+  const router = useRouter();
 
   async function chekAddProduct(productId: string) {
+    // Check if user is logged in
+    if (!session?.user) {
+      toast.error("🔒 يجب تسجيل الدخول أولاً لإضافة المنتج للسلة", {
+        description: "اضغط هنا للانتقال لصفحة تسجيل الدخول",
+        action: {
+          label: "تسجيل الدخول",
+          onClick: () => router.push("/login")
+        }
+      });
+      return;
+    }
+
     console.log("=== ADD TO CART DEBUG ===");
     console.log("Product ID:", productId);
     try {
       const result = await addProductToCart(productId);
       console.log("Add to cart result:", result);
       if (result) {
-        toast.success("✅ Product added to cart successfully!");
+        toast.success("✅ تم إضافة المنتج للسلة بنجاح!");
       } else {
-        toast.error("❌ Failed to add product to cart");
+        toast.error("❌ فشل في إضافة المنتج للسلة");
       }
     } catch (error) {
       console.error("Add to cart error:", error);
-      toast.error("❌ Failed to add product to cart");
+      toast.error("❌ فشل في إضافة المنتج للسلة");
     }
   }
 
